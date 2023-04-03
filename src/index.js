@@ -1,0 +1,11 @@
+const express = require("express");
+const { bootstrap } = require("./database/config/db");
+const { restRouter } = require("./routes");
+require("dotenv").config();
+const app = express();
+const port = 8000;
+app.use(express.json());
+app.use("/api/v1/", restRouter);
+app.get("/", (_req, res) => res.send("Hello World!"));
+app.listen(port, () => console.log(`App listening on port ${port}!`));
+bootstrap();
