@@ -1,12 +1,18 @@
 const db = require("../../database/models");
 
 const post = db.Post;
+const user = db.User;
 exports.addPost = async (req, res) => {
   try {
     const { title, content, userId } = req.body;
-    const isPost = await post.findOne({ where: { title } });
+    const isPost = await user.findOne({
+      where: { id: userId },
+      include: [
+        { model: post, as: "posts", attributes: ["title"], where: { title } },
+      ],
+    });
     if (isPost) {
-      res.status(403).json({ message: "Post already exists" });
+      res.status(403).json({ message: "Post with this tittle already exists" });
     } else {
       const data = await post.create({ title, content, userId });
       res.status(200).json({ message: "Post created successfully", data });
